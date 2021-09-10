@@ -1,9 +1,8 @@
 import Navbar from "./Navbar";
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { useState } from 'react';
-import styled from 'styled-components';
 import LoginPage from "./LoginPage/LoginPage";
 import SignupPage from "./SignupPage/SignupPage";
+import HabitsPage from "./HabitsPage/HabitsPage";
 
 export default function App() {
 
@@ -16,6 +15,9 @@ export default function App() {
             </Route>
             <Route path="/cadastro" exact>
               <SignupPage />
+            </Route>
+            <Route path="/habitos" exact>
+              <HabitsPage />
             </Route>
           </Switch>
         </BrowserRouter>

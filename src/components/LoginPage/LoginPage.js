@@ -1,16 +1,36 @@
-import styled from 'styled-components';
+import { postLogIn } from "../../service/trackit";
+import { Body, Container, Logo, Input, Button, GoTo } from '../shared/StyledComponents.js';
 import logo from '../assets/logo.svg';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function LoginPage() {
+
+    const [ email, setEmail ] = useState("");
+    const [ password, setPassword ] = useState("");
+    const history = useHistory();
+
+    function login (event) {
+
+        event.preventDefault();
+
+        const body = {
+            email,
+            password
+        }
+
+        postLogIn(body).then( () => history.push('/habitos') ).catch( err => console.log(err.response.data.message) )
+    }
   
     return (
         <Body>
             <Logo src={logo}/>
             <Container>
-                <Input type="text"  placeholder="email"/>
-                <Input type="password"  placeholder="senha"/>
-                <Button>Entrar</Button>
+                <form onSubmit={login}> 
+                    <Input type="email" name="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} value={email} required/>
+                    <Input type="password" name="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value={password} required/>
+                    <Button>Entrar</Button>
+                </form>
                 <Link to={`/cadastro`}>
                     <GoTo>Não tem uma conta? Cadastre-se!</GoTo>
                 </Link>
@@ -18,67 +38,3 @@ export default function LoginPage() {
         </Body>
     );
 }
-
-const Body = styled.div`
-    max-width: 375px;
-    margin: auto;
-    font-family: Lexend Deca;
-    font-style: normal;
-    font-weight: normal;
-`
-
-const Container = styled.div`
-    flex-direction: column;
-    justify-content: center;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-`
-
-const Logo = styled.img`
-    margin-top: 68px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 180px;
-    height: auto;
-    margin-bottom: 28px;
-`
-
-const Input = styled.input`
-    width: 100%;
-    height: 45px;
-    background: #FFFFFF;
-    border: 1px solid #D5D5D5;
-    box-sizing: border-box;
-    border-radius: 5px;
-    margin: 3px;
-    font-size: 20px;
-    padding-left: 10px;
-
-    ::placeholder {
-    color: #DBDBDB;
-    }
-`
-
-const Button = styled.button`
-    width: 100%;
-    height: 45px;
-    margin: 3px;
-    background: #52B6FF;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    font-size: 20px;
-    text-align: center;
-    color: #FFFFFF;
-`
-
-const GoTo = styled.p`
-    margin-top: 22px;
-    font-size: 14px;
-    text-align: center;
-    text-decoration-line: underline;
-    color: #52B6FF;
-    cursor: pointer;
-`
