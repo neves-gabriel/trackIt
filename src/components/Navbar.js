@@ -1,7 +1,43 @@
+import styled from "styled-components";
+import small_logo from '../assets/small_logo.svg';
+
 export default function Navbar() {
   
   return (
-    <div className="navbar">
-    </div>
+    <Header>
+      <SmallLogo src={small_logo}/>
+      <UserImage/>
+    </Header>
   );
 }
+
+const Header = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 70px;
+  left: 0px;
+  top: 0px;
+  background: #126BA5;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+  padding-right: 18px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const SmallLogo = styled.img`
+  display: block;
+  width: 97px;
+  height: auto;
+`
+
+const UserImage = styled.img`
+  display: block;
+  width: 50px;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 50px;
+  background: red;
+  border-radius: 100px;
+`

@@ -1,6 +1,6 @@
 import { postSignUp } from "../../service/trackit";
 import { Body, Container, Logo, Input, Button, GoTo } from '../shared/StyledComponents.js';
-import logo from '../assets/logo.svg';
+import logo from '../../assets/logo.svg';
 import { Link, useHistory } from 'react-router-dom';
 import { useState } from 'react';
 

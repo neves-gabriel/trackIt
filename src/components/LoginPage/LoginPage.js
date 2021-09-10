@@ -1,6 +1,6 @@
 import { postLogIn } from "../../service/trackit";
 import { Body, Container, Logo, Input, Button, GoTo } from '../shared/StyledComponents.js';
-import logo from '../assets/logo.svg';
+import logo from '../../assets/logo.svg';
 import { Link, useHistory } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -19,7 +19,7 @@ export default function LoginPage() {
             password
         }
 
-        postLogIn(body).then( () => history.push('/habitos') ).catch( err => console.log(err.response.data.message) )
+        postLogIn(body).then( res => { history.push('/habitos'); console.log(res.data) } ).catch( err => console.log(err.response.data.message) )
     }
   
     return (
