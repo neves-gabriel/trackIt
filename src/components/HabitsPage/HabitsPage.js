@@ -1,3 +1,4 @@
+import CreateHabit from "./CreateHabit.js";
 import styled from "styled-components";
 import Footer from "../Footer";
 import Navbar from "../Navbar";
@@ -12,6 +13,7 @@ export default function HabitsPage() {
                 <TopText>Meus hábitos</TopText>
                 <AddButton>+</AddButton>
             </Top>
+            <CreateHabit/>
             <BodyText>
                 Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
             </BodyText>

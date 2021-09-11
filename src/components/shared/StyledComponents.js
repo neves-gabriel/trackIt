@@ -9,8 +9,8 @@ const Body = styled.div`
 `
 
 const Container = styled.div`
+    display: flex;
     flex-direction: column;
-    justify-content: center;
     max-width: 300px;
     margin-left: auto;
     margin-right: auto;
@@ -33,7 +33,6 @@ const Input = styled.input`
     border: 1px solid #D5D5D5;
     box-sizing: border-box;
     border-radius: 5px;
-    margin: 3px;
     font-size: 20px;
     padding-left: 10px;
 
@@ -47,7 +46,6 @@ const Button = styled.button.attrs({
     })`
     width: 100%;
     height: 45px;
-    margin: 3px;
     background: #52B6FF;
     cursor: pointer;
     border: none;
@@ -65,11 +63,19 @@ const GoTo = styled.p`
     color: #52B6FF;
     cursor: pointer;
 `
+
+const Forms = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+`
+
 export {
     Body,
     Container,
     Logo,
     Input,
     Button,
-    GoTo
+    GoTo,
+    Forms
 }
