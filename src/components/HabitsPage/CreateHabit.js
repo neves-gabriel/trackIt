@@ -1,29 +1,51 @@
 import styled from "styled-components";
 import { Input, Forms } from '../shared/StyledComponents.js';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import DayButton from "./DayButton.js";
+import { Link, useHistory } from 'react-router-dom';
+import HabitContext from '../../contexts/HabitContext';
+import UserContext from '../../contexts/UserContext';
+import { postCreateHabit } from "../../service/trackit.js";
+import { days } from "../../data/days.js";
 
-export default function CreateHabit() {
+export default function CreateHabit(props) {
 
-    const days = [ "D", "S", "T", "Q", "Q", "S", "S" ];
+    const { showCreateHabit, setShowCreateHabit } = useContext(HabitContext);
+    const { userData, setUserData } = useContext(UserContext);
     const [ habitName, setHabitName ] = useState("");
+    const [ habitDays, setHabitDays ] = useState([]);
+    const history = useHistory();
+
+    function saveHabit () {
+
+        const body = {
+            name: habitName,
+            days: habitDays
+        }
+
+        const config = {
+            headers: { 
+                "Authorization": 'Bearer ' + userData.token
+            }
+        }
+
+        postCreateHabit(body, config).then( (res) => { history.push('/habitos'); console.log(res.data); } ).catch( err => console.log(err.response) )
+    }
 
     return (
-        <ContainerCreateHabit>
-            <Forms>
-                <Input type="text" name="habitName" placeholder="nome do hábito" onChange={(e) => setHabitName(e.target.value)} value={habitName} required/>
-                <ContainerDays>
-                    {
-                        days.map( d => (
-                        <DayButton day={d}/>
-                        ))
-                    }
-                </ContainerDays>
-                <ContainerButtons>
-                    <CancelText>Cancelar</CancelText>
-                    <SaveButton>Salvar</SaveButton>
-                </ContainerButtons>
-            </Forms>
+        <ContainerCreateHabit show={showCreateHabit}>
+            <HabitContext.Provider value={{ habitDays, setHabitDays }}>
+                <Forms onSubmit={saveHabit}>
+                    <Input type="text" name="habitName" placeholder="nome do hábito" onChange={(e) => setHabitName(e.target.value)} value={habitName} required/>
+                    <ContainerDays>
+                        { days.map( days => <DayButton days={days}/> ) }
+                    </ContainerDays>                        
+                    <ContainerButtons>
+                        <CancelText onClick={ () => setShowCreateHabit("") } >Cancelar</CancelText>
+                        <SaveButton type="submit">Salvar</SaveButton>
+                    </ContainerButtons>
+                </Forms>
+            </HabitContext.Provider>
         </ContainerCreateHabit>
     );
 
@@ -35,7 +57,10 @@ const ContainerCreateHabit = styled.div`
     background: #FFFFFF;
     border-radius: 5px;
     padding: 18px;
-    display: flex;
+
+    display: ${ props => (props.show ? 'flex' : 'none')};
+
+    transition: all .3s ease .15s;
     flex-direction: column;
     gap: 8px;
     font-family: Lexend Deca;
@@ -70,6 +95,7 @@ const CancelText = styled.span`
     font-size: 16px;
     text-align: center;
     color: #52B6FF;
+    cursor: pointer;
 `
 
 const SaveButton = styled.button`
@@ -84,4 +110,5 @@ const SaveButton = styled.button`
     font-size: 15.976px;
     text-align: center;
     color: #FFFFFF;
+    cursor: pointer;
 ` 

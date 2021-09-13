@@ -2,10 +2,12 @@ import { postLogIn } from "../../service/trackit";
 import { Body, Container, Logo, Input, Button, GoTo, Forms } from '../shared/StyledComponents.js';
 import logo from '../../assets/logo.svg';
 import { Link, useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import UserContext from '../../contexts/UserContext';
 
 export default function LoginPage() {
 
+    const { userData, setUserData } = useContext(UserContext);
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const history = useHistory();
@@ -19,7 +21,7 @@ export default function LoginPage() {
             password
         }
 
-        postLogIn(body).then( res => { history.push('/habitos'); console.log(res.data) } ).catch( err => console.log(err.response.data.message) )
+        postLogIn(body).then( res => { history.push('/habitos'); console.log(res.data); setUserData(res.data) } ).catch( err => console.log(err.response.data.message) )
     }
   
     return (

@@ -1,12 +1,16 @@
 import styled from "styled-components";
 import small_logo from '../assets/small_logo.svg';
+import UserContext from '../contexts/UserContext';
+import { useState, useContext } from 'react';
 
 export default function Navbar() {
+
+  const { userData, setUserData } = useContext(UserContext);
   
   return (
     <Header>
       <SmallLogo src={small_logo}/>
-      <UserImage/>
+      <UserImage src={userData.image}/>
     </Header>
   );
 }

@@ -2,8 +2,12 @@ import CreateHabit from "./CreateHabit.js";
 import styled from "styled-components";
 import Footer from "../Footer";
 import Navbar from "../Navbar";
+import { useState, useContext } from 'react';
+import HabitContext from '../../contexts/HabitContext';
 
 export default function HabitsPage() {
+
+    const [ showCreateHabit, setShowCreateHabit ] = useState("");
   
     return (
       <>
@@ -11,9 +15,11 @@ export default function HabitsPage() {
         <Background>
             <Top>
                 <TopText>Meus hábitos</TopText>
-                <AddButton>+</AddButton>
+                <AddButton onClick={ () => setShowCreateHabit(true) } >+</AddButton>
             </Top>
-            <CreateHabit/>
+            <HabitContext.Provider value={{ showCreateHabit, setShowCreateHabit }}>
+                <CreateHabit/>
+            </HabitContext.Provider>
             <BodyText>
                 Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
             </BodyText>
