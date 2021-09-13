@@ -39,40 +39,44 @@ export default function TodayPage() {
       sendTodayRequest();
     }, []);
 
-    function markCheck () {
+    const sendHabitChecked = async () => {
+        try {
+            const config = {
+                headers: { 
+                    "Authorization": 'Bearer ' + userData.token
+                }
+            };
+            const res = await checkHabit(habitToBeChecked, config);
+        } catch (err) {
+            // Handle Error Here
+            console.error(err);
+        }
+    }
+
+    const sendHabitUnchecked = async () => {
+        try {
+            const config = {
+                headers: { 
+                    "Authorization": 'Bearer ' + userData.token
+                }
+            };
+            const res = await uncheckHabit(habitToBeChecked, config);
+        } catch (err) {
+            // Handle Error Here
+            console.error(err);
+        }
+    }
+
+  function markCheck () {
 
       if (markedCheck === true) {
           setMarkedCheck();
-          sendHabitUnchecked(habitToBeChecked);
+          sendHabitUnchecked();
       } else {
          setMarkedCheck(true);
-         sendHabitChecked(habitToBeChecked);
+         sendHabitChecked();
       } 
-    }
-
-    function sendHabitChecked() {
-
-      const config = {
-        headers: { 
-            "Authorization": 'Bearer ' + userData.token
-        }
-      }
-
-      checkHabit(habitToBeChecked, config).then( () => history.push('/hoje') ).catch( err => console.log(err.response.data.message) )
-
-    }
-
-    function sendHabitUnchecked() {
-
-      const config = {
-        headers: { 
-            "Authorization": 'Bearer ' + userData.token
-        }
-      }
-      
-      uncheckHabit(habitToBeChecked, config).then( () => history.push('/hoje') ).catch( err => console.log(err.response.data.message) )
-
-    }
+  }
 
     return (
       <>
@@ -86,7 +90,7 @@ export default function TodayPage() {
               <TopText>{todayHabits.name}</TopText>
               <BottomText>Sequência atual: {todayHabits.currentSequence} dias</BottomText>
               <BottomText>Seu recorde: {todayHabits.highestSequence} dias</BottomText>
-              <ContainerCheck selected={markedCheck} onClick={ () => { markCheck(); setHabitToBeChecked(todayHabits.id); }}>
+              <ContainerCheck selected={markedCheck} onClick={ () => { markCheck(); setHabitToBeChecked(todayHabits.id) }}>
                 <Check src={check}/>
               </ContainerCheck>
           </ContainerTodayHabit>) } 

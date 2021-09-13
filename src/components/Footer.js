@@ -52,6 +52,7 @@ const BottomText = styled.span`
   text-align: center;
   color: #52B6FF;
   font-weight: 400;
+  cursor: pointer;
 `
 
 const ContainerProgressBar = styled.div`
