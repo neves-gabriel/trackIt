@@ -5,16 +5,18 @@ import dayjs from "dayjs";
 import { useState, useContext, useEffect } from 'react';
 import HabitContext from '../../contexts/HabitContext';
 import UserContext from '../../contexts/UserContext';
-import { getTodayHabits } from "../../service/trackit";
+import { getTodayHabits, checkHabit, uncheckHabit } from "../../service/trackit";
 import check from "../../assets/check.svg";
+import { Link, useHistory } from 'react-router-dom';
 
 export default function TodayPage() {
   
-
-
     const { userData, setUserData } = useContext(UserContext);
     const { userHabits, setUserHabits } = useContext(UserContext);
     const { todayHabits, setTodayHabits } = useContext(UserContext);
+    const [ markedCheck, setMarkedCheck ] = useState("");
+    const [ habitToBeChecked, setHabitToBeChecked ] = useState("");
+    const history = useHistory();
 
     useEffect(() => {
 
@@ -37,6 +39,41 @@ export default function TodayPage() {
       sendTodayRequest();
     }, []);
 
+    function markCheck () {
+
+      if (markedCheck === true) {
+          setMarkedCheck();
+          sendHabitUnchecked(habitToBeChecked);
+      } else {
+         setMarkedCheck(true);
+         sendHabitChecked(habitToBeChecked);
+      } 
+    }
+
+    function sendHabitChecked() {
+
+      const config = {
+        headers: { 
+            "Authorization": 'Bearer ' + userData.token
+        }
+      }
+
+      checkHabit(habitToBeChecked, config).then( () => history.push('/hoje') ).catch( err => console.log(err.response.data.message) )
+
+    }
+
+    function sendHabitUnchecked() {
+
+      const config = {
+        headers: { 
+            "Authorization": 'Bearer ' + userData.token
+        }
+      }
+      
+      uncheckHabit(habitToBeChecked, config).then( () => history.push('/hoje') ).catch( err => console.log(err.response.data.message) )
+
+    }
+
     return (
       <>
         <Navbar/>
@@ -49,7 +86,7 @@ export default function TodayPage() {
               <TopText>{todayHabits.name}</TopText>
               <BottomText>Sequência atual: {todayHabits.currentSequence} dias</BottomText>
               <BottomText>Seu recorde: {todayHabits.highestSequence} dias</BottomText>
-              <ContainerCheck>
+              <ContainerCheck selected={markedCheck} onClick={ () => { markCheck(); setHabitToBeChecked(todayHabits.id); }}>
                 <Check src={check}/>
               </ContainerCheck>
           </ContainerTodayHabit>) } 
@@ -136,16 +173,17 @@ const ContainerCheck = styled.div`
     cursor: pointer;
     width: 69px;
   height: 69px;
-  background: #EBEBEB;
   border: 1px solid #E7E7E7;
   box-sizing: border-box;
   border-radius: 5px;
   display: flex;
   justify-content:center;
   align-items: center;
+
+  background: ${props => (props.selected === true ? '#8FC549' : '#EBEBEB')};
 `
 
 const Check = styled.img`
- width: 35,09px
- height: auto
+  width: 35,09px
+  height: auto
 `

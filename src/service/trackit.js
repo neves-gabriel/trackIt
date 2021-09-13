@@ -32,13 +32,13 @@ function getTodayHabits (config) {
     return promise;
 }
 
-function checkHabit (habitId) {
-    const promise = axios.post(`${BASE_URL}/habits/${habitId}/check`)
+function checkHabit (habitToBeChecked, config) {
+    const promise = axios.post(`${BASE_URL}/habits/${habitToBeChecked}/check`, config)
     return promise;
 }
 
-function uncheckHabit (habitId) {
-    const promise = axios.post(`${BASE_URL}/habits/${habitId}/uncheck`)
+function uncheckHabit (habitToBeChecked, config) {
+    const promise = axios.post(`${BASE_URL}/habits/${habitToBeChecked}/uncheck`, config)
     return promise;
 }
 
