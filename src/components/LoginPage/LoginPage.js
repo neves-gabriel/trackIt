@@ -1,4 +1,4 @@
-import { postLogIn } from "../../service/trackit";
+import { getHabits, postLogIn } from "../../service/trackit";
 import { Body, Container, Logo, Input, Button, GoTo, Forms } from '../shared/StyledComponents.js';
 import logo from '../../assets/logo.svg';
 import { Link, useHistory } from 'react-router-dom';
@@ -8,6 +8,7 @@ import UserContext from '../../contexts/UserContext';
 export default function LoginPage() {
 
     const { userData, setUserData } = useContext(UserContext);
+    const { userHabits, setUserHabits } = useContext(UserContext);
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const history = useHistory();
@@ -20,10 +21,23 @@ export default function LoginPage() {
             email,
             password
         }
+        
+        const sendLoginRequest = async () => {
+            try {
+                const resp = await postLogIn(body);
+                console.log(resp.data);
+                setUserData(resp.data);
+                history.push('/hoje');
+            } catch (err) {
+                // Handle Error Here
+                console.error(err.response.data.message);
+            }
+        };
 
-        postLogIn(body).then( res => { history.push('/habitos'); console.log(res.data); setUserData(res.data) } ).catch( err => console.log(err.response.data.message) )
+        sendLoginRequest();
     }
-  
+
+
     return (
         <Body>
             <Logo src={logo}/>

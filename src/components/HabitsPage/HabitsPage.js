@@ -2,12 +2,53 @@ import CreateHabit from "./CreateHabit.js";
 import styled from "styled-components";
 import Footer from "../Footer";
 import Navbar from "../Navbar";
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import HabitContext from '../../contexts/HabitContext';
+import UserContext from '../../contexts/UserContext';
+import { deleteHabit, getHabits, postLogIn } from "../../service/trackit";
+import HabitBox from "./HabitBox.js";
 
 export default function HabitsPage() {
 
     const [ showCreateHabit, setShowCreateHabit ] = useState("");
+    const [ habitIDEliminate, setHabitIDEliminate ] = useState("");
+    const { userData, setUserData } = useContext(UserContext);
+    const { userHabits, setUserHabits } = useContext(UserContext);
+
+    useEffect(() => {
+
+        const sendHabitsRequest = async () => {
+        try {
+            const config = {
+                headers: { 
+                    "Authorization": 'Bearer ' + userData.token
+                }
+            };
+            const res = await getHabits(config);
+            console.log(res.data);
+            setUserHabits(res.data);
+        } catch (err) {
+            // Handle Error Here
+            console.error(err.response.data.message);
+        }
+        };
+  
+        sendHabitsRequest();
+    }, []);
+
+    const sendHabitElimination = async () => {
+            try {
+                const config = {
+                    headers: { 
+                        "Authorization": 'Bearer ' + userData.token
+                    }
+                };
+                const res = await deleteHabit(habitIDEliminate, config);
+            } catch (err) {
+                // Handle Error Here
+                console.error(err);
+            }
+    };
   
     return (
       <>
@@ -20,9 +61,12 @@ export default function HabitsPage() {
             <HabitContext.Provider value={{ showCreateHabit, setShowCreateHabit }}>
                 <CreateHabit/>
             </HabitContext.Provider>
-            <BodyText>
+            <HabitContext.Provider value={{ habitIDEliminate, setHabitIDEliminate, sendHabitElimination }}>
+                { userHabits.map( userHabits => <HabitBox userHabits={userHabits}/> ) }
+            </HabitContext.Provider>
+            { userHabits.length === 0 ? <BodyText>
                 Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
-            </BodyText>
+            </BodyText> : "" } 
         </Background>
         <Footer/>
       </>

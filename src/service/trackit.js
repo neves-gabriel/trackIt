@@ -17,18 +17,18 @@ function postCreateHabit (body, config) {
     return promise;
 }
 
-function getHabits () {
-    const promise = axios.get(`${BASE_URL}/habits`)
+function getHabits (config) {
+    const promise = axios.get(`${BASE_URL}/habits`, config)
     return promise;
 }
 
-function deleteHabit (habitId) {
-    const promise = axios.delete(`${BASE_URL}/habits/${habitId}`)
+function deleteHabit (habitIDEliminate, config) {
+    const promise = axios.delete(`${BASE_URL}/habits/${habitIDEliminate}`, config)
     return promise;
 }
 
-function getTodayHabits () {
-    const promise = axios.get(`${BASE_URL}/habits/today`)
+function getTodayHabits (config) {
+    const promise = axios.get(`${BASE_URL}/habits/today`, config)
     return promise;
 }
 

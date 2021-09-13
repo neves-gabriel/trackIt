@@ -16,7 +16,9 @@ export default function CreateHabit(props) {
     const [ habitDays, setHabitDays ] = useState([]);
     const history = useHistory();
 
-    function saveHabit () {
+    function saveHabit (event) {
+
+        event.preventDefault();
 
         const body = {
             name: habitName,
@@ -29,7 +31,7 @@ export default function CreateHabit(props) {
             }
         }
 
-        postCreateHabit(body, config).then( (res) => { history.push('/habitos'); console.log(res.data); } ).catch( err => console.log(err.response) )
+        postCreateHabit(body, config).then( (res) => { console.log(res.data); setShowCreateHabit(""); } ).catch( err => console.log(err.response) )
     }
 
     return (
