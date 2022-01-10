@@ -19,7 +19,7 @@ export default function HabitsPage() {
 
     function loadHabits() {
         const request = getHabits(userData.token);
-        request.then(response => {console.log(response.data);
+        request.then(response => {
             setUserHabits(response.data);
         })
     }
@@ -48,9 +48,8 @@ export default function HabitsPage() {
 }
 
 const Background = styled.div`
-    height: 100vh;
     margin-top: 70px;
-    margin-bottom: 70px;
+    margin-bottom: 100px;
     margin-right: auto;
     margin-left: auto;
     padding-top: 22px;

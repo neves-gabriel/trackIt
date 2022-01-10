@@ -2,8 +2,11 @@ import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "../styles/react-circular-progressbar.css";
 import { Link, useHistory } from 'react-router-dom';
-
+import UserContext from '../contexts/UserContext';
+import { useContext } from "react";
 export default function Footer() {
+
+  const { progress } = useContext(UserContext);
 
   const history = useHistory();
 
@@ -12,7 +15,7 @@ export default function Footer() {
       <BottomText  onClick={ () => history.push('/habitos')} >Hábitos</BottomText>
       <ContainerProgressBar onClick={ () => history.push('/hoje')} >
         <CircularProgressbar
-        value={50}
+        value={progress}
         text="Hoje"
         background
         backgroundPadding={6}

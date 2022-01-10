@@ -10,8 +10,8 @@ import check from "../../assets/check.svg";
 export default function TodayPage() {
   
     const { userData } = useContext(UserContext);
+    const { progress, setProgress } = useContext(UserContext);
     const [todayHabits, setTodayHabits] = useState([]);
-    const [progress, setProgress] = useState();
 
     useEffect(() => {
       loadHabits();
@@ -25,7 +25,7 @@ export default function TodayPage() {
 
   function loadHabits() {
       const request = getTodayHabits(userData.token);
-      request.then(response => {console.log(response.data);
+      request.then(response => {
         setTodayHabits(response.data);
         updateProgress(response.data);
       })
@@ -78,7 +78,7 @@ export default function TodayPage() {
 					}
 
         </Background>
-        <Footer/>
+        <Footer progress={progress} />
       </>
     );
 }

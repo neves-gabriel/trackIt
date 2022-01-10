@@ -49,7 +49,7 @@ export default function CreateHabit({ showCreateHabit, setShowCreateHabit, loadH
 
 const ContainerCreateHabit = styled.div`
     width: 340px;
-    height: 180px;
+    min-height: 180px;
     background: #FFFFFF;
     border-radius: 5px;
     padding: 18px;
