@@ -32,10 +32,7 @@ export default function HabitsPage() {
                 <TopText>Meus hábitos</TopText>
                 <AddButton onClick={ () => setShowCreateHabit(true) } >+</AddButton>
             </Top>
-            { showCreateHabit ? 
-                <CreateHabit setShowCreateHabit={setShowCreateHabit} loadHabits={loadHabits} /> :
-                null
-            }
+            <CreateHabit showCreateHabit={showCreateHabit} setShowCreateHabit={setShowCreateHabit} loadHabits={loadHabits} />
     
 			{userHabits.length > 0 ? userHabits.map(habit => (
 				<HabitBox key={habit.id} habit={habit} loadHabits={loadHabits} />
@@ -48,6 +45,7 @@ export default function HabitsPage() {
 }
 
 const Background = styled.div`
+min-height: 100vh;
     margin-top: 70px;
     margin-bottom: 100px;
     margin-right: auto;

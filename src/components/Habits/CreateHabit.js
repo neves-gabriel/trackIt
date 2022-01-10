@@ -5,6 +5,7 @@ import DayButton from "./DayButton.js";
 import UserContext from '../../contexts/UserContext';
 import { postCreateHabit } from "../../service/trackit.js";
 import { days } from "../../data/days.js";
+import { ThreeDots } from 'react-loading-icons';
 
 export default function CreateHabit({ showCreateHabit, setShowCreateHabit, loadHabits }) {
 
@@ -15,13 +16,18 @@ export default function CreateHabit({ showCreateHabit, setShowCreateHabit, loadH
 
     function saveHabit (event) {
         event.preventDefault();
+        if ( habitDays.length === 0 ) {
+            return alert("Escolha pelo menos um dia da semana");
+        }
 
         const body = { name: habitName, days: habitDays };
 
         const request = postCreateHabit(userData.token, body);
-        request.then(response => {console.log(response.data);
+        request.then(response => {
             setLoading(false);
             setShowCreateHabit(false);
+            setHabitDays([]);
+            setHabitName("");
             loadHabits();
         })
         request.catch(err => {
@@ -31,7 +37,7 @@ export default function CreateHabit({ showCreateHabit, setShowCreateHabit, loadH
     }
 
     return (
-        <ContainerCreateHabit >
+        <ContainerCreateHabit show={showCreateHabit} >
             <Forms onSubmit={saveHabit}>
                 <Input disabled={loading} type="text" name="habitName" placeholder="nome do hábito" onChange={(e) => setHabitName(e.target.value)} value={habitName} required/>
                 <ContainerDays>
@@ -39,7 +45,11 @@ export default function CreateHabit({ showCreateHabit, setShowCreateHabit, loadH
                 </ContainerDays>                        
                 <ContainerButtons>
                     <CancelText onClick={ () => setShowCreateHabit(false) } >Cancelar</CancelText>
-                    <SaveButton disabled={loading} type="submit">Salvar</SaveButton>
+                    <SaveButton disabled={loading} type="submit">
+                        { loading ?
+                        <ThreeDots /> :
+                        "Salvar"}
+                    </SaveButton>
                 </ContainerButtons>
             </Forms>
         </ContainerCreateHabit>
@@ -48,6 +58,8 @@ export default function CreateHabit({ showCreateHabit, setShowCreateHabit, loadH
 }
 
 const ContainerCreateHabit = styled.div`
+    display: ${ props => (props.show ? 'flex' : 'none')};
+
     width: 340px;
     min-height: 180px;
     background: #FFFFFF;
