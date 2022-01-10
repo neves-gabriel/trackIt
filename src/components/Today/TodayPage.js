@@ -54,7 +54,7 @@ export default function TodayPage() {
 
     return (
       <>
-        <Navbar/>
+        <Navbar currentPage={"/hoje"} />
         <Background>
           <Top>
             <TitleText>

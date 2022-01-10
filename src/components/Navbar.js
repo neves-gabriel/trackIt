@@ -3,14 +3,36 @@ import small_logo from '../assets/small_logo.svg';
 import UserContext from '../contexts/UserContext';
 import { useContext } from 'react';
 import { Link, useHistory } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function Navbar() {
+export default function Navbar( currentPage ) {
 
   const history = useHistory();
 
-  const { userData } = useContext(UserContext);
+  const { userData, setUserData } = useContext(UserContext);
   const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("token") !== "" &&
+      localStorage.getItem("token") !== null
+    ) {
+        setUserData(
+            {
+                "id": localStorage.getItem("id"),
+                "name": localStorage.getItem("name"),
+                "image": localStorage.getItem("image"),
+                "email": localStorage.getItem("email"),
+                "password": localStorage.getItem("password"),
+                "token": localStorage.getItem("token"),
+            }
+        );
+        history.push(currentPage);
+        return;
+    } else {
+      history.push("/");
+    }
+  } , []);
 
   const onClick = () => setIsActive(!isActive);
 

@@ -5,7 +5,7 @@ import Navbar from "../Navbar";
 export default function HistoryPage() {
     return (
       <>
-        <Navbar/>
+        <Navbar currentPage={"/historico"} />
         <Background>
             <Top>
                 <TopText>Histórico</TopText>

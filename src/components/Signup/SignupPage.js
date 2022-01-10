@@ -2,7 +2,8 @@ import { postSignUp } from "../../service/trackit";
 import { Body, Container, Logo, Input, Button, GoTo, Forms } from '../shared/StyledComponents.js';
 import logo from '../../assets/logo.svg';
 import { Link, useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import UserContext from '../../contexts/UserContext';
 import { ThreeDots } from 'react-loading-icons';
 
 export default function SignupPage() {
@@ -12,7 +13,29 @@ export default function SignupPage() {
     const [ name, setName ] = useState("");
     const [ image, setImage ] = useState("");
     const [ loading, setLoading ] = useState(false);
+    const { setUserData } = useContext(UserContext);
     const history = useHistory();
+
+    useEffect(() => {
+        if (
+          localStorage.getItem("token") !== "" &&
+          localStorage.getItem("token") !== null
+        ) {
+            setUserData(
+                {
+                    "id": localStorage.getItem("id"),
+                    "name": localStorage.getItem("name"),
+                    "image": localStorage.getItem("image"),
+                    "email": localStorage.getItem("email"),
+                    "password": localStorage.getItem("password"),
+                    "token": localStorage.getItem("token"),
+                }
+            );
+            history.push("/hoje");
+            return;
+        }
+        setLoading(false);
+    }, []);
 
     function register (event) {
         event.preventDefault();

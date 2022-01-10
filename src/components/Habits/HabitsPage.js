@@ -26,7 +26,7 @@ export default function HabitsPage() {
   
     return (
       <>
-        <Navbar/>
+        <Navbar currentPage={"/habitos"} />
         <Background>
             <Top>
                 <TopText>Meus hábitos</TopText>
