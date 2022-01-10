@@ -60,7 +60,7 @@ export default function TodayPage() {
             <TitleText>
               {getToday().locale('pt-br').format("dddd[, ]DD/MM")}
             </TitleText>
-            <SubTitleText>
+            <SubTitleText progress={progress > 0 ? true : false}>
               {progress === "0" ? "Nenhum hábito concluído ainda" : progress === "100" ? "Parabéns! Você concluiu todos os seus hábitos de hoje" : `${progress}% dos hábitos concluídos`}
             </SubTitleText>
           </Top>
@@ -68,8 +68,8 @@ export default function TodayPage() {
 					{todayHabits.length > 0 ? todayHabits.map((habit, index) => (
 						<ContainerTodayHabit key={habit.id} isDone={habit.done}>
                 <TopText>{habit.name}</TopText>
-								<BottomText>Sequência atual: {habit.currentSequence} dias</BottomText>
-                <BottomText>Seu recorde: {habit.highestSequence} dias</BottomText>
+								<BottomText isDone={habit.done}>Sequência atual: {habit.currentSequence} dias</BottomText>
+                <BottomText brokeRecorde={habit.currentSequence >= habit.highestSequence && habit.currentSequence > 0 ? true : false}>Seu recorde: {habit.highestSequence} dias</BottomText>
               <ContainerCheck selected={habit.done} onClick={() => clickHabit(habit, index)} >
                 <Check src={check}/>
               </ContainerCheck>
@@ -121,8 +121,8 @@ const TitleText = styled.p`
 `
 const SubTitleText = styled.p`
   font-size: 18px;
-  color: #BABABA;
   text-align:left;
+  color: ${props => props.progress? "#8FC549" : "#BABABA"};
 `
 
 const TopText = styled.p`
@@ -134,6 +134,8 @@ const BottomText = styled.p`
     font-size: 13px;
     color: #666666;
     text-align: left;
+    color: ${props => props.isDone ? "#8FC549" : "inherit"};
+    color: ${props => props.brokeRecorde ? "#8FC549" : "inherit"};
 `
 
 const ContainerTodayHabit = styled.div`
