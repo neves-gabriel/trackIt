@@ -21,17 +21,15 @@ export default function LoginPage() {
         const body = { email, password };
 
         const request = postLogIn(body);
-        request.then(response => {console.log(response.data);
+        request.then(response => {
             setUserData(response.data);
             history.push('/hoje');
             setLoading(false);
         })
         request.catch(err => {
-            console.log(err.response.data.message);
             window.alert( err.response.data.message );
             setLoading(false);
         })
-
     }
 
 
