@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import small_logo from '../assets/small_logo.svg';
 import UserContext from '../contexts/UserContext';
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 
 export default function Navbar() {
 
-  const { userData, setUserData } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   
   return (
     <Header>
