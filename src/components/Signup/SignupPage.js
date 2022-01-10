@@ -13,7 +13,6 @@ export default function SignupPage() {
     const history = useHistory();
 
     function register (event) {
-
         event.preventDefault();
 
         const body = {
