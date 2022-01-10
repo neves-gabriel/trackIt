@@ -45,12 +45,13 @@ export default function HabitsPage() {
 }
 
 const Background = styled.div`
-min-height: 100vh;
+    min-height: 100vh;
     margin-top: 70px;
-    margin-bottom: 100px;
+    margin-bottom: 70px;
     margin-right: auto;
     margin-left: auto;
     padding-top: 22px;
+    padding-bottom: 30px;
     padding-left: 18px;
     padding-right: 18px;
     font-family: Lexend Deca;

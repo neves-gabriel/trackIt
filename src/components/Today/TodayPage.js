@@ -84,12 +84,13 @@ export default function TodayPage() {
 }
 
 const Background = styled.div`
-    height: 100vh;
+    min-height: 100vh;
     margin-top: 70px;
     margin-bottom: 70px;
     margin-right: auto;
     margin-left: auto;
     padding-top: 22px;
+    padding-bottom: 30px;
     padding-left: 18px;
     padding-right: 18px;
     font-family: Lexend Deca;
@@ -128,6 +129,8 @@ const SubTitleText = styled.p`
 const TopText = styled.p`
     font-size: 20px;
     color: #666666;
+    word-break: break-word;
+    width: 210px;
 `
 
 const BottomText = styled.p`
@@ -140,7 +143,7 @@ const BottomText = styled.p`
 
 const ContainerTodayHabit = styled.div`
     width: 340px;
-    height: 94px;
+    min-height: 94px;
     background: #FFFFFF;
     border-radius: 5px;
     padding: 15px;
