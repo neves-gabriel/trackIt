@@ -3,42 +3,26 @@ import styled from "styled-components";
 import Footer from "../Footer";
 import Navbar from "../Navbar";
 import { useState, useContext, useEffect } from 'react';
-import HabitContext from '../../contexts/HabitContext';
 import UserContext from '../../contexts/UserContext';
-import { deleteHabit, getHabits } from "../../service/trackit";
+import { getHabits } from "../../service/trackit";
 import HabitBox from "./HabitBox.js";
 
 export default function HabitsPage() {
 
-    const [ showCreateHabit, setShowCreateHabit ] = useState("");
-    const [ habitIDEliminate, setHabitIDEliminate ] = useState("");
-    const { userData, setUserData } = useContext(UserContext);
-    const { userHabits, setUserHabits } = useContext(UserContext);
+    const [ showCreateHabit, setShowCreateHabit ] = useState(false);
+    const { userData } = useContext(UserContext);
+    const [ userHabits, setUserHabits ] = useState([]);
 
     useEffect(() => {
         loadHabits();
-	}, []);
+	},[]);
 
     function loadHabits() {
         const request = getHabits(userData.token);
-        request.then(response => {
+        request.then(response => {console.log(response.data);
             setUserHabits(response.data);
         })
     }
-
-    const sendHabitElimination = async () => {
-            try {
-                const config = {
-                    headers: { 
-                        "Authorization": 'Bearer ' + userData.token
-                    }
-                };
-                const res = await deleteHabit(habitIDEliminate, config);
-            } catch (err) {
-                // Handle Error Here
-                console.error(err);
-            }
-    };
   
     return (
       <>
@@ -48,15 +32,15 @@ export default function HabitsPage() {
                 <TopText>Meus hábitos</TopText>
                 <AddButton onClick={ () => setShowCreateHabit(true) } >+</AddButton>
             </Top>
-            <HabitContext.Provider value={{ showCreateHabit, setShowCreateHabit }}>
-                <CreateHabit/>
-            </HabitContext.Provider>
-            <HabitContext.Provider value={{ habitIDEliminate, setHabitIDEliminate, sendHabitElimination }}>
-                { userHabits.map( userHabits => <HabitBox userHabits={userHabits}/> ) }
-            </HabitContext.Provider>
-            { userHabits.length === 0 ? <BodyText>
-                Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
-            </BodyText> : "" } 
+            { showCreateHabit ? 
+                <CreateHabit setShowCreateHabit={setShowCreateHabit} loadHabits={loadHabits} /> :
+                null
+            }
+    
+			{userHabits.length > 0 ? userHabits.map(habit => (
+				<HabitBox key={habit.id} habit={habit} loadHabits={loadHabits} />
+			)) : <BodyText>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</BodyText>}
+
         </Background>
         <Footer/>
       </>
@@ -64,7 +48,6 @@ export default function HabitsPage() {
 }
 
 const Background = styled.div`
-    max-width: 375px;
     height: 100vh;
     margin-top: 70px;
     margin-bottom: 70px;
@@ -79,6 +62,7 @@ const Background = styled.div`
     background: #F2F2F2;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 28px;
     font-family: Lexend Deca;
     font-style: normal;
@@ -87,12 +71,11 @@ const Background = styled.div`
 
 const Top = styled.div`
     height: 35px;
-    width: 100%;
+    width: 340px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
 `
 
 const TopText = styled.span`
@@ -115,5 +98,5 @@ const AddButton = styled.button`
 const BodyText = styled.span`
     font-size: 18px;
     color: #666666;
-
+    width: 340px;
 `

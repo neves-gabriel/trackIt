@@ -15,7 +15,7 @@ export default function TodayPage() {
 
     useEffect(() => {
       loadHabits();
-    }, );
+    }, []);
 
     useEffect(() => {
       if (todayHabits.length > 0) {
@@ -25,7 +25,7 @@ export default function TodayPage() {
 
   function loadHabits() {
       const request = getTodayHabits(userData.token);
-      request.then(response => {
+      request.then(response => {console.log(response.data);
         setTodayHabits(response.data);
         updateProgress(response.data);
       })

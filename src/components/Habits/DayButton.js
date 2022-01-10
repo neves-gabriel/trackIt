@@ -2,9 +2,9 @@ import styled from "styled-components";
 import { useState, useContext } from 'react';
 import HabitContext from '../../contexts/HabitContext';
 
-export default function DayButton({ days }) {
+export default function DayButton({ days, habitDays, setHabitDays }) {
 
-    const { habitDays, setHabitDays } = useContext(HabitContext);
+
     const [ selectedDay, setSelectedDay ] = useState("");
     const numberDay = days.number;
 

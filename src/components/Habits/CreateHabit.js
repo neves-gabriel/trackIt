@@ -2,52 +2,46 @@ import styled from "styled-components";
 import { Input, Forms } from '../shared/StyledComponents.js';
 import { useState, useContext } from 'react';
 import DayButton from "./DayButton.js";
-import { Link, useHistory } from 'react-router-dom';
-import HabitContext from '../../contexts/HabitContext';
 import UserContext from '../../contexts/UserContext';
 import { postCreateHabit } from "../../service/trackit.js";
 import { days } from "../../data/days.js";
 
-export default function CreateHabit(props) {
+export default function CreateHabit({ showCreateHabit, setShowCreateHabit, loadHabits }) {
 
-    const { showCreateHabit, setShowCreateHabit } = useContext(HabitContext);
-    const { userData, setUserData } = useContext(UserContext);
+    const { userData } = useContext(UserContext);
     const [ habitName, setHabitName ] = useState("");
     const [ habitDays, setHabitDays ] = useState([]);
-    const history = useHistory();
+    const [ loading, setLoading ] = useState(false);
 
     function saveHabit (event) {
-
         event.preventDefault();
 
-        const body = {
-            name: habitName,
-            days: habitDays
-        }
+        const body = { name: habitName, days: habitDays };
 
-        const config = {
-            headers: { 
-                "Authorization": 'Bearer ' + userData.token
-            }
-        }
-
-        postCreateHabit(body, config).then( (res) => { console.log(res.data); setShowCreateHabit(""); } ).catch( err => console.log(err.response) )
+        const request = postCreateHabit(userData.token, body);
+        request.then(response => {console.log(response.data);
+            setLoading(false);
+            setShowCreateHabit(false);
+            loadHabits();
+        })
+        request.catch(err => {
+            window.alert( err.response.data.message );
+            setLoading(false);
+        })
     }
 
     return (
-        <ContainerCreateHabit show={showCreateHabit}>
-            <HabitContext.Provider value={{ habitDays, setHabitDays }}>
-                <Forms onSubmit={saveHabit}>
-                    <Input type="text" name="habitName" placeholder="nome do hábito" onChange={(e) => setHabitName(e.target.value)} value={habitName} required/>
-                    <ContainerDays>
-                        { days.map( days => <DayButton days={days}/> ) }
-                    </ContainerDays>                        
-                    <ContainerButtons>
-                        <CancelText onClick={ () => setShowCreateHabit("") } >Cancelar</CancelText>
-                        <SaveButton type="submit">Salvar</SaveButton>
-                    </ContainerButtons>
-                </Forms>
-            </HabitContext.Provider>
+        <ContainerCreateHabit >
+            <Forms onSubmit={saveHabit}>
+                <Input disabled={loading} type="text" name="habitName" placeholder="nome do hábito" onChange={(e) => setHabitName(e.target.value)} value={habitName} required/>
+                <ContainerDays>
+                    { days.map( days => <DayButton disabled={loading} days={days} habitDays={habitDays} setHabitDays={setHabitDays} /> ) }
+                </ContainerDays>                        
+                <ContainerButtons>
+                    <CancelText onClick={ () => setShowCreateHabit(false) } >Cancelar</CancelText>
+                    <SaveButton disabled={loading} type="submit">Salvar</SaveButton>
+                </ContainerButtons>
+            </Forms>
         </ContainerCreateHabit>
     );
 
@@ -59,9 +53,6 @@ const ContainerCreateHabit = styled.div`
     background: #FFFFFF;
     border-radius: 5px;
     padding: 18px;
-
-    display: ${ props => (props.show ? 'flex' : 'none')};
-
     transition: all .3s ease .15s;
     flex-direction: column;
     gap: 8px;

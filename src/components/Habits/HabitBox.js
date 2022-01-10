@@ -1,21 +1,29 @@
 import styled from "styled-components";
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { days } from "../../data/days.js";
 import trash from '../../assets/trash.svg';
-import HabitContext from '../../contexts/HabitContext';
+import UserContext from "../../contexts/UserContext.js";
+import { deleteHabit } from "../../service/trackit.js";
 
 
-export default function HabitBox({ userHabits }) {
+export default function HabitBox({ habit, loadHabits }) {
 
-    const { habitIDEliminate, setHabitIDEliminate, sendHabitElimination } = useContext(HabitContext);
+    const { userData } = useContext(UserContext);
+
+    function deleteThisHabit() {
+		const confirmed = window.confirm("Tem certeza de que quer deletar este hábito?");
+		if (confirmed)
+			deleteHabit(userData.token, habit.id)
+				.then(() => loadHabits());
+	}
 
     return (
         <ContainerHabit>
-            <HabitTitle>{userHabits.name}</HabitTitle>
+            <HabitTitle>{habit.name}</HabitTitle>
             <ContainerDays>
-                { days.map( days => <DaysButtons selected={ userHabits.days.includes(days.number) } type="button">{days.day}</DaysButtons> ) }
+                { days.map( days => <DaysButtons selected={ habit.days.includes(days.number) } type="button">{days.day}</DaysButtons> ) }
             </ContainerDays>
-            <ContainerTrash onClick={ () => { setHabitIDEliminate(userHabits.id); sendHabitElimination(); }} src={trash} />
+            <ContainerTrash  src={trash} onClick={deleteThisHabit} />
         </ContainerHabit>   
     );
 }
