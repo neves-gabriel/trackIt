@@ -5,7 +5,7 @@ import Navbar from "../Navbar";
 import { useState, useContext, useEffect } from 'react';
 import HabitContext from '../../contexts/HabitContext';
 import UserContext from '../../contexts/UserContext';
-import { deleteHabit, getHabits, postLogIn } from "../../service/trackit";
+import { deleteHabit, getHabits } from "../../service/trackit";
 import HabitBox from "./HabitBox.js";
 
 export default function HabitsPage() {
@@ -16,25 +16,15 @@ export default function HabitsPage() {
     const { userHabits, setUserHabits } = useContext(UserContext);
 
     useEffect(() => {
+        loadHabits();
+	}, []);
 
-        const sendHabitsRequest = async () => {
-        try {
-            const config = {
-                headers: { 
-                    "Authorization": 'Bearer ' + userData.token
-                }
-            };
-            const res = await getHabits(config);
-            console.log(res.data);
-            setUserHabits(res.data);
-        } catch (err) {
-            // Handle Error Here
-            console.error(err.response.data.message);
-        }
-        };
-  
-        sendHabitsRequest();
-    }, []);
+    function loadHabits() {
+        const request = getHabits(userData.token);
+        request.then(response => {
+            setUserHabits(response.data);
+        })
+    }
 
     const sendHabitElimination = async () => {
             try {

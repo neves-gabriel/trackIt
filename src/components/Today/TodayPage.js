@@ -3,79 +3,53 @@ import Footer from "../Footer";
 import Navbar from "../Navbar";
 import dayjs from "dayjs";
 import { useState, useContext, useEffect } from 'react';
-import HabitContext from '../../contexts/HabitContext';
 import UserContext from '../../contexts/UserContext';
 import { getTodayHabits, checkHabit, uncheckHabit } from "../../service/trackit";
 import check from "../../assets/check.svg";
-import { Link, useHistory } from 'react-router-dom';
 
 export default function TodayPage() {
   
-    const { userData, setUserData } = useContext(UserContext);
-    const { userHabits, setUserHabits } = useContext(UserContext);
-    const { todayHabits, setTodayHabits } = useContext(UserContext);
-    const [ markedCheck, setMarkedCheck ] = useState("");
-    const [ habitToBeChecked, setHabitToBeChecked ] = useState("");
-    const history = useHistory();
+    const { userData } = useContext(UserContext);
+    const [todayHabits, setTodayHabits] = useState([]);
+    const [progress, setProgress] = useState();
 
     useEffect(() => {
+      loadHabits();
+    }, );
 
-      const sendTodayRequest = async () => {
-        try {
-            const config = {
-                headers: { 
-                    "Authorization": 'Bearer ' + userData.token
-                }
-            };
-            const res = await getTodayHabits(config);
-            console.log(res.data);
-            setTodayHabits(res.data);
-        } catch (err) {
-            // Handle Error Here
-            console.error(err.response.data.message);
-        }
-      };
+    useEffect(() => {
+      if (todayHabits.length > 0) {
+        updateProgress();
+      }
+    }, [todayHabits]);
 
-      sendTodayRequest();
-    }, []);
+  function loadHabits() {
+      const request = getTodayHabits(userData.token);
+      request.then(response => {
+        setTodayHabits(response.data);
+        updateProgress(response.data);
+      })
+  }
 
-    const sendHabitChecked = async () => {
-        try {
-            const config = {
-                headers: { 
-                    "Authorization": 'Bearer ' + userData.token
-                }
-            };
-            const res = await checkHabit(habitToBeChecked, config);
-        } catch (err) {
-            // Handle Error Here
-            console.error(err);
-        }
-    }
+  function getToday() {
+		require("dayjs/locale/pt-br");
+		const today = dayjs().locale('pt-br');
+		return today;
+	}
 
-    const sendHabitUnchecked = async () => {
-        try {
-            const config = {
-                headers: { 
-                    "Authorization": 'Bearer ' + userData.token
-                }
-            };
-            const res = await uncheckHabit(habitToBeChecked, config);
-        } catch (err) {
-            // Handle Error Here
-            console.error(err);
-        }
-    }
+  function updateProgress() {
+		const todayHabitsDone = todayHabits.filter(habit => habit.done);
+		setProgress((todayHabitsDone.length / todayHabits.length * 100).toFixed(0));
+	}
 
-  function markCheck () {
-
-      if (markedCheck === true) {
-          setMarkedCheck();
-          sendHabitUnchecked();
-      } else {
-         setMarkedCheck(true);
-         sendHabitChecked();
-      } 
+  function clickHabit(habit) {
+		if (!habit.done) {
+			checkHabit(userData.token, habit.id)
+				.then(() => loadHabits());
+		} else {
+			uncheckHabit(userData.token, habit.id)
+				.then(() => loadHabits());
+		}
   }
 
     return (
@@ -83,17 +57,26 @@ export default function TodayPage() {
         <Navbar/>
         <Background>
           <Top>
-            <TitleText>hohe</TitleText>
-            <SubTitleText>hohe</SubTitleText>
+            <TitleText>
+              {getToday().locale('pt-br').format("dddd[, ]DD/MM")}
+            </TitleText>
+            <SubTitleText>
+              {progress === "0" ? "Nenhum hábito concluído ainda" : progress === "100" ? "Parabéns! Você concluiu todos os seus hábitos de hoje" : `${progress}% dos hábitos concluídos`}
+            </SubTitleText>
           </Top>
-          {todayHabits.map( todayHabits =>  <ContainerTodayHabit>
-              <TopText>{todayHabits.name}</TopText>
-              <BottomText>Sequência atual: {todayHabits.currentSequence} dias</BottomText>
-              <BottomText>Seu recorde: {todayHabits.highestSequence} dias</BottomText>
-              <ContainerCheck selected={markedCheck} onClick={ () => { markCheck(); setHabitToBeChecked(todayHabits.id) }}>
+
+					{todayHabits.length > 0 ? todayHabits.map((habit, index) => (
+						<ContainerTodayHabit key={habit.id} isDone={habit.done}>
+                <TopText>{habit.name}</TopText>
+								<BottomText>Sequência atual: {habit.currentSequence} dias</BottomText>
+                <BottomText>Seu recorde: {habit.highestSequence} dias</BottomText>
+              <ContainerCheck selected={habit.done} onClick={() => clickHabit(habit, index)} >
                 <Check src={check}/>
               </ContainerCheck>
-          </ContainerTodayHabit>) } 
+						</ContainerTodayHabit>
+					)) : "Nenhum hábito pra hoje!"
+					}
+
         </Background>
         <Footer/>
       </>
@@ -101,7 +84,6 @@ export default function TodayPage() {
 }
 
 const Background = styled.div`
-    max-width: 375px;
     height: 100vh;
     margin-top: 70px;
     margin-bottom: 70px;
@@ -116,6 +98,7 @@ const Background = styled.div`
     background: #F2F2F2;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 28px;
     font-family: Lexend Deca;
     font-style: normal;
@@ -123,13 +106,11 @@ const Background = styled.div`
 `
 
 const Top = styled.div`
+  width: 340px;
     height: 35px;
-    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: flex-start;
-
 `
 
 const TitleText = styled.p`

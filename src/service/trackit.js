@@ -17,8 +17,9 @@ function postCreateHabit (body, config) {
     return promise;
 }
 
-function getHabits (config) {
-    const promise = axios.get(`${BASE_URL}/habits`, config)
+function getHabits (token) {
+    const config = { headers: { "Authorization": 'Bearer ' + token } };
+    const promise = axios.get(`${BASE_URL}/habits`, config);
     return promise;
 }
 
@@ -27,19 +28,22 @@ function deleteHabit (habitIDEliminate, config) {
     return promise;
 }
 
-function getTodayHabits (config) {
+function getTodayHabits (token) {
+    const config = { headers: { "Authorization": 'Bearer ' + token } };
     const promise = axios.get(`${BASE_URL}/habits/today`, config)
     return promise;
 }
 
-function checkHabit (habitToBeChecked, config) {
-    const promise = axios.post(`${BASE_URL}/habits/${habitToBeChecked}/check`, config)
-    return promise;
+function checkHabit (token, habitID) {
+    const config = { headers: { "Authorization": `Bearer ${token}` } };
+	const promise = axios.post(`${BASE_URL}/habits/${habitID}/check`, "", config);
+	return promise;
 }
 
-function uncheckHabit (habitToBeChecked, config) {
-    const promise = axios.post(`${BASE_URL}/habits/${habitToBeChecked}/uncheck`, config)
-    return promise;
+function uncheckHabit (token, habitID) {
+    const config = { headers: { "Authorization": `Bearer ${token}` } };
+	const promise = axios.post(`${BASE_URL}/habits/${habitID}/uncheck`, "", config);
+	return promise;
 }
 
 function getHabitsHistory () {
